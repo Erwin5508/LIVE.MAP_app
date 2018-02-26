@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/the_whole_frame"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.android.livemap.LiveMapActivity">
+
+    <com.example.android.livemap.MessageDisplay
+        android:background="@drawable/bottom_layout_background"
+        android:text="Hello World!"
+        android:visibility="visible"
+        android:id="@+id/message_display_box"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/Menu_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible" />
+
+    <!--RESIZEABLE BOTTOM FRAME-->
+    <RelativeLayout
+        android:id="@+id/bottom_frame"
+        android:layout_centerHorizontal="true"
+        android:foregroundGravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="400dp"
+        android:layout_height="500dp">
+
+        <LinearLayout
+            android:id="@+id/middle_bar"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@drawable/middle_bar_shape">
+
+                <ImageButton
+                    android:layout_margin="22dp"
+                    android:background="@drawable/ic_add_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+
+                <com.example.android.livemap.Scroller
+                    android:id="@+id/scroller"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+
+                <ImageButton
+                    android:layout_margin="22dp"
+                    android:background="@drawable/ic_delete_black_24dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_below="@+id/middle_bar"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+
+            <com.example.android.livemap.DragHandleLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"/>
+
+            <com.example.android.livemap.DragHandle
+                android:background="@drawable/ic_drag_handle_black_24dp"
+                android:id="@+id/drag_handle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"/>
+
+        </FrameLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/objectives_recycler_view"
+            android:layout_below="@+id/middle_bar"
+            android:layout_above="@+id/linearLayout"
+            android:background="@color/colorAccent"
+            android:alpha="0.2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <!--BOTTOM CANCEL OR SEND MESSAGE BUTTON-->
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:background="#FFFFFF"
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/photoPickerButton"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@android:drawable/ic_menu_gallery" />
+
+            <EditText
+                android:id="@+id/messageEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:enabled="false"
+                android:text="@string/send_button_label"/>
+
+            <Button
+                android:visibility="gone"
+                android:background="#D50000"
+                android:text="@string/cancel_button_label"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>
