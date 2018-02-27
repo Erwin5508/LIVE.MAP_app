@@ -1,9 +1,14 @@
 package com.example.android.livemap;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -20,6 +25,11 @@ import android.widget.Toast;
 import com.example.android.livemap.Animation.ResizeAnimation;
 import com.example.android.livemap.Database.Messages;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -41,6 +51,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 public class LiveMapActivity extends AppCompatActivity implements
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
         OnMapReadyCallback {
 
     // Firebase sign in
@@ -53,6 +65,7 @@ public class LiveMapActivity extends AppCompatActivity implements
 
     // Firebase data
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
+    private static final int PERMISSIONS_REQUEST_FINE_LOCATION = 111;
     private ChildEventListener mChildEventListener;
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mMessagesDatabaseReferences;
@@ -73,6 +86,9 @@ public class LiveMapActivity extends AppCompatActivity implements
     private EditText mMessageEditText;
     private StringBuilder mMessagesText = new StringBuilder("");
     private MessageDisplay mMessageDisplay;
+    private FusedLocationProviderApi mFusedLocationClient;
+    private GoogleApiClient mClient;
+    private GoogleMap mGoogleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,6 +173,8 @@ public class LiveMapActivity extends AppCompatActivity implements
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.Menu_map);
         mapFragment.getMapAsync(this);
+
+        mFusedLocationClient = LocationServices.FusedLocationApi;
     }
 
     public void initScroller(Scroller scroller) {
@@ -209,6 +227,26 @@ public class LiveMapActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        // Current Location
+        ActivityCompat.requestPermissions(LiveMapActivity.this,
+                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_REQUEST_FINE_LOCATION);
+
+        if (ActivityCompat.checkSelfPermission(LiveMapActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(LiveMapActivity.this, "You will not be able to broadcast your location",
+                    Toast.LENGTH_LONG).show();
+        } else {
+            mClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .enableAutoManage(this, this)
+                    .build();
+            mGoogleMap = googleMap;
+        }
+
         // Icons
         markerBitmap = new HelperClass()._getBitmap(R.drawable.ic_android_black_24dp, this);
 
@@ -220,7 +258,6 @@ public class LiveMapActivity extends AppCompatActivity implements
                 .position(sydney)
                 .icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
                 .title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
 
 
@@ -262,6 +299,33 @@ public class LiveMapActivity extends AppCompatActivity implements
             mMessagesDatabaseReferences.removeEventListener(mChildEventListener);
             mChildEventListener = null;
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Toast.makeText(LiveMapActivity.this, "API Client Connection Successful!", Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(LiveMapActivity.this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location currentLocation = mFusedLocationClient.getLastLocation(mClient);
+        double Lat = currentLocation.getLatitude();
+        double Lng = currentLocation.getLongitude();
+        LatLng position = new LatLng(Lat, Lng);
+        mGoogleMap.addMarker(new MarkerOptions()
+                .position(position)
+                .title("Your position"));
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Toast.makeText(LiveMapActivity.this, "API Client Connection Suspended!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Toast.makeText(LiveMapActivity.this, "API Client Connection Failed!", Toast.LENGTH_SHORT).show();
     }
 
     /**************************************************************************

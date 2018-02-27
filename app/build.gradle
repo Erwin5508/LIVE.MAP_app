@@ -52,8 +52,9 @@ dependencies {
 
     // FirebaseUI
     compile 'com.firebaseui:firebase-ui-auth:1.1.1'
-    compile "com.google.android.gms:play-services-auth:${androidGmsVersion}"
+    compile("com.google.android.gms:play-services-auth:${androidGmsVersion}")
 
     compile("com.google.android.gms:play-services-location:${androidGmsVersion}")
+    compile("com.google.android.gms:play-services-places:${androidGmsVersion}")
 }
 apply plugin: 'com.google.gms.google-services'
