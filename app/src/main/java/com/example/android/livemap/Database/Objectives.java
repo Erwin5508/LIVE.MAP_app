@@ -11,6 +11,10 @@ public class Objectives {
     private double latitude;
     private double longitude;
 
+    public Objectives() {
+
+    }
+
     public Objectives(String title, String description, double latitude, double longitude) {
         this.title = title;
         this.description = description;

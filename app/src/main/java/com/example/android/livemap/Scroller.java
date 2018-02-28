@@ -27,15 +27,17 @@ public class Scroller extends NumberPicker {
 
     @Override
     public void onDraw(Canvas canvas) {
+
+        int border = 5;
         Paint paint = new Paint();
         paint.setColor(Color.parseColor("#01579B"));
         paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(10);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setStrokeWidth(20);
         //canvas.drawCircle(1,1,5, paint);
-        canvas.drawOval(0,0, getMeasuredWidth(), getMeasuredHeight(), paint);
+        canvas.drawOval(border,border, getMeasuredWidth() -border,
+                getMeasuredHeight() -border, paint);
         super.onDraw(canvas);
-
     }
 
     @Override

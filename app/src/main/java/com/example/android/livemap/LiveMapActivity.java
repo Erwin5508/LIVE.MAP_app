@@ -1,29 +1,34 @@
 package com.example.android.livemap;
 
 import android.Manifest;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.example.android.livemap.Animation.ResizeAnimation;
+import com.example.android.livemap.Animation.DragLayout;
 import com.example.android.livemap.Database.Messages;
+import com.example.android.livemap.Database.ObjectivesContract;
+import com.example.android.livemap.Database.TestObjectivesData;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -47,8 +52,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import static android.view.MotionEvent.INVALID_POINTER_ID;
 
 public class LiveMapActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -83,6 +86,9 @@ public class LiveMapActivity extends AppCompatActivity implements
     private Bitmap markerBitmap;
     private Button mSendButton;
 
+    private ObjectivesAdapter mObjectivesAdapter;
+    private RecyclerView mObjectivesRecyclerView;
+
     private EditText mMessageEditText;
     private StringBuilder mMessagesText = new StringBuilder("");
     private MessageDisplay mMessageDisplay;
@@ -96,14 +102,30 @@ public class LiveMapActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_live_map);
 
         mHandle = (DragHandle) findViewById(R.id.drag_handle);
-        mHandle.setOnTouchListener(new MyTouchListener());
         mBottomFrame = (RelativeLayout) findViewById(R.id.bottom_frame);
+        mHandle.setOnTouchListener(new DragLayout(mBottomFrame, LiveMapActivity.this));
         mBottomFrameSize = mBottomFrame.getHeight();
         numberPicker = (Scroller) findViewById(R.id.scroller);
         initScroller(numberPicker);
         mSendButton = (Button) findViewById(R.id.sendButton);
         mMessageEditText = (EditText) findViewById(R.id.messageEditText);
         mMessageDisplay = (MessageDisplay) findViewById(R.id.message_display_box);
+
+        mObjectivesRecyclerView = (RecyclerView) this.findViewById(R.id.objectives_recycler_view);
+        mObjectivesRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //try {
+            Uri uri = ObjectivesContract.ObjectivesEntry.CONTENT_URI;
+            ContentResolver contentResolver = LiveMapActivity.this.getContentResolver();
+            contentResolver.delete(uri, null, null);
+            for(ContentValues c:new TestObjectivesData().insertFakeData()){
+                contentResolver.insert(uri, c);
+            }
+            mObjectivesAdapter = new ObjectivesAdapter(LiveMapActivity.this,
+                    contentResolver.query(uri, null, null, null, null, null), null);
+            mObjectivesRecyclerView.setAdapter(mObjectivesAdapter);
+        //} catch (Exception e) {
+        //    Toast.makeText(LiveMapActivity.this, e.toString(), Toast.LENGTH_LONG).show();
+        //}
 
         // Authentication
         FirebaseApp.initializeApp(getApplicationContext());
@@ -178,11 +200,49 @@ public class LiveMapActivity extends AppCompatActivity implements
     }
 
     public void initScroller(Scroller scroller) {
-        String[] options = {"hello", "jeanfilip", "fff", "bbbb"};
+        String[] options = {"STOP REQUESTING", "20sec/req", "40sec/req", "1min/req", "2min/req", "5min/req"};
         int max = options.length;
         scroller.setDisplayedValues(options);
         scroller.setMinValue(0);
         scroller.setMaxValue(max -1);
+        scroller.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                //String currentValue = picker.getDisplayedValues()[newVal];
+                //Toast.makeText(LiveMapActivity.this, currentValue, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void delayedLocationRequest(int scroller_position) {
+        int delay;
+        switch (scroller_position) {
+            case 0:
+                return;
+            case 1:
+                delay = 20 * 60;
+                break;
+            case 2:
+                delay = 40 * 60;
+                break;
+            case 3:
+                delay = 60 * 60;
+                break;
+            case 4:
+                delay = 2 * 60 * 60;
+                break;
+            case 5:
+                delay = 5 * 60 * 60;
+                break;
+            default:
+                return;
+        }
+        new android.os.Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, delay);
     }
 
     @Override
@@ -257,7 +317,7 @@ public class LiveMapActivity extends AppCompatActivity implements
         Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(sydney)
                 .icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
-                .title("Marker in Sydney"));
+                .title("Ninja Lair"));
 
 
 
@@ -278,10 +338,13 @@ public class LiveMapActivity extends AppCompatActivity implements
     private void attachDatabaseReadListener() {
         if (mChildEventListener == null) {
             mChildEventListener = new ChildEventListener() {
+                boolean notFirst = false;
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Messages message = dataSnapshot.getValue(Messages.class);
-                    mMessagesText.append(message);
+                    if (notFirst) mMessagesText.append("\n");
+                    mMessagesText.append(message.getUser_id() + ": " + message.getMessage() );
+                    notFirst = true;
                     mMessageDisplay.setText(mMessagesText);
                 }
 
@@ -326,99 +389,5 @@ public class LiveMapActivity extends AppCompatActivity implements
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Toast.makeText(LiveMapActivity.this, "API Client Connection Failed!", Toast.LENGTH_SHORT).show();
-    }
-
-    /**************************************************************************
-     * Management of the layout manipulations
-     */
-    //Reaction to the button being pressed
-    private final class MyTouchListener implements View.OnTouchListener {
-        // TODO Handle Handler ;)
-
-        private int mActivePointerId = INVALID_POINTER_ID;
-
-        float mLastTouchY;
-        float mPosY;
-
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int Y = (int) event.getY();
-            int MaxHeight = 1000;
-            int MinHeight = 600;
-            int GForce = 5;
-
-            switch (MotionEventCompat.getActionMasked(event)) {
-
-                case MotionEvent.ACTION_DOWN: {
-                    final int pointerIndex = MotionEventCompat.getActionIndex(event);
-                    final float y = MotionEventCompat.getY(event, pointerIndex);
-
-                    // Remember where we started (for dragging)
-                    mLastTouchY = y;
-                    // Save the ID of this pointer (for dragging)
-                    mActivePointerId = MotionEventCompat.getPointerId(event, 0);
-                    break;
-                }
-
-                case MotionEvent.ACTION_MOVE: {
-                    final int pointerIndex =
-                            MotionEventCompat.findPointerIndex(event, mActivePointerId);
-
-                    final float y = MotionEventCompat.getY(event, pointerIndex);
-
-                    // Calculate the distance moved
-                    final float dy = y - mLastTouchY;
-
-                    mPosY += dy;
-
-
-                    // Remember this touch position for the next move event
-                    mLastTouchY = y;
-
-                    return true;
-                }
-                case MotionEvent.ACTION_UP: {
-                    mActivePointerId = INVALID_POINTER_ID;
-                    break;
-                }
-
-                case MotionEvent.ACTION_CANCEL: {
-                    mActivePointerId = INVALID_POINTER_ID;
-                    break;
-                }
-
-                case MotionEvent.ACTION_POINTER_UP: {
-
-                    final int pointerIndex = MotionEventCompat.getActionIndex(event);
-                    final int pointerId = MotionEventCompat.getPointerId(event, pointerIndex);
-
-                    if (pointerId == mActivePointerId) {
-                        // This was our active pointer going up. Choose a new
-                        // active pointer and adjust accordingly.
-                        final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                        mLastTouchY = MotionEventCompat.getY(event, newPointerIndex);
-                        mActivePointerId = MotionEventCompat.getPointerId(event, newPointerIndex);
-                    }
-                    break;
-                }
-            }
-
-            mBottomFrame.getParent();
-            ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mBottomFrame.getLayoutParams();
-
-            int newHeight = layoutParams.height - (int) mPosY;
-            if (newHeight <= MaxHeight && newHeight >= MinHeight) {
-                ResizeAnimation animation = new ResizeAnimation(mBottomFrame);
-                animation.setDuration(200);
-                animation.setParams(layoutParams.height, newHeight);
-                mBottomFrame.startAnimation(animation);
-            }
-
-
-//            //toastMessage(String.format("%s:%s",layoutParams.height,mSubViewSize));
-//            v.requestLayout();
-            return true;
-        }
     }
 }

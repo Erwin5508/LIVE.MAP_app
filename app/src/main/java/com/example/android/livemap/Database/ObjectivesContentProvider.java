@@ -48,7 +48,7 @@ public class ObjectivesContentProvider extends ContentProvider {
 
         switch (match) {
             case ALL_DATA:
-                retCursor = db.query(TABLE_NAME,
+                retCursor = db.query(OBJECTIVES_TABLE_NAME,
                         projection,
                         selection,
                         selectionArgs,
@@ -79,7 +79,7 @@ public class ObjectivesContentProvider extends ContentProvider {
         Uri returnUri;
         switch (match) {
             case ALL_DATA:
-                long id = db.insert(TABLE_NAME, null, values);
+                long id = db.insert(OBJECTIVES_TABLE_NAME, null, values);
                 if (id >= 0) {
                     returnUri = ContentUris.withAppendedId
                             (CONTENT_URI, id);
@@ -105,7 +105,7 @@ public class ObjectivesContentProvider extends ContentProvider {
         switch (match) {
 
             case ALL_DATA:
-                tasksDeleted = db.delete(TABLE_NAME, null, null);
+                tasksDeleted = db.delete(OBJECTIVES_TABLE_NAME, null, null);
                 break;
 
             default:

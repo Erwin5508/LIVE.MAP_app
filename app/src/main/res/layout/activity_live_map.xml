@@ -7,22 +7,26 @@
     android:layout_height="match_parent"
     tools:context="com.example.android.livemap.LiveMapActivity">
 
+    <fragment
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/Menu_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/map_fragment_bottom_margin"
+        android:visibility="visible" />
+
     <com.example.android.livemap.MessageDisplay
         android:background="@drawable/bottom_layout_background"
         android:text="Hello World!"
         android:visibility="visible"
         android:id="@+id/message_display_box"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginLeft="4dp"
+        android:padding="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
-    <fragment
-        android:name="com.google.android.gms.maps.MapFragment"
-        android:id="@+id/Menu_map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible" />
 
     <!--RESIZEABLE BOTTOM FRAME-->
     <RelativeLayout
@@ -55,6 +59,7 @@
 
                 <com.example.android.livemap.Scroller
                     android:id="@+id/scroller"
+                    android:descendantFocusability="blocksDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -94,6 +99,7 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/objectives_recycler_view"
+            android:paddingTop="40dp"
             android:layout_below="@+id/middle_bar"
             android:layout_above="@+id/linearLayout"
             android:background="@color/colorAccent"
@@ -101,24 +107,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <!--BOTTOM CANCEL OR SEND MESSAGE BUTTON-->
+        <!--BOTTOM CANCEL OR SEND MESSAGE BAR-->
         <LinearLayout
             android:layout_alignParentBottom="true"
-            android:background="#FFFFFF"
+            android:background="@color/colorPrimaryDark"
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageButton
-                android:id="@+id/photoPickerButton"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:background="@android:drawable/ic_menu_gallery" />
-
             <EditText
                 android:id="@+id/messageEditText"
                 android:layout_width="0dp"
+                android:hint="@string/message_suggestion"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1" />
@@ -132,6 +133,7 @@
                 android:text="@string/send_button_label"/>
 
             <Button
+                android:id="@+id/cancel_button"
                 android:visibility="gone"
                 android:background="#D50000"
                 android:text="@string/cancel_button_label"

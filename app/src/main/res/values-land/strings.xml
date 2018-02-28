@@ -17,6 +17,5 @@
     <string name="send_button_label">Send</string>
     <string name="cancel_button_label">Cancel</string>
 
-    <string name="message_suggestion">type message...</string>
-    <string name="relative_layout_screen_position">center_horizontal</string>
+    <string name="relative_layout_screen_position">left</string>
 </resources>
