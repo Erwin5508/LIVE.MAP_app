@@ -134,6 +134,14 @@
                 android:layout_weight="1" />
 
             <Button
+                android:id="@+id/sendButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:enabled="false"
+                android:text="@string/send_button_label"/>
+
+            <Button
                 android:id="@+id/cancel_button"
                 android:background="#D50000"
                 android:text="@string/cancel_button_label"
@@ -142,14 +150,6 @@
                 android:textSize="22sp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
-            <Button
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:enabled="false"
-                android:text="@string/send_button_label"/>
 
         </LinearLayout>
     </RelativeLayout>

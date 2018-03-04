@@ -14,7 +14,7 @@ public class ObjectivesDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "objective_save.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public ObjectivesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -27,8 +27,8 @@ public class ObjectivesDbHelper extends SQLiteOpenHelper {
                         _ID                    + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         OBJECTIVES_TITLE       + " TEXT NOT NULL, " +
                         OBJECTIVES_DESCRIPTION + " TEXT NOT NULL, " +
-                        OBJECTIVES_LAT         + " DECIMAL NOT NULL, " +
-                        OBJECTIVES_LNG         + " DECIMAL NOT NULL " + "); ";
+                        OBJECTIVES_LAT         + " REAL NOT NULL, " +
+                        OBJECTIVES_LNG         + " REAL NOT NULL " + "); ";
 
         db.execSQL(SQL_CREATE_OBJECTIVES_TABLE);
     }

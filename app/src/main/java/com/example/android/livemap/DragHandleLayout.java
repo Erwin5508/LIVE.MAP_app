@@ -39,6 +39,7 @@ public class DragHandleLayout extends View {
         paint.setAntiAlias(false);
 
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        paint.setAlpha(0xFF);
 
         canvas.drawRect(0, 0, (float) getMeasuredWidth(), (float) getMeasuredHeight()/2.0f, paint);
         canvas.drawRect((float) getMeasuredWidth() /3, (float) getMeasuredHeight() /2,

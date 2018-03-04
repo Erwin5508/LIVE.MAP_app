@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'live_map'
+            keyPassword 'password'
+            storeFile file("$rootDir/keystore.jks")
+            storePassword 'password'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "27.0.1"
     defaultConfig {
@@ -15,6 +23,9 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+            signingConfig signingConfigs.config
+            renderscriptDebuggable false
         }
     }
     packagingOptions {
@@ -30,31 +41,28 @@ dependencies {
         firebaseVersion = "10.0.0"
         supportVersion = "25.3.1"
     }
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile("com.android.support:appcompat-v7:${supportVersion}")
-    compile("com.android.support:design:${supportVersion}")
+    compile "com.android.support:appcompat-v7:${supportVersion}"
+    compile "com.android.support:design:${supportVersion}"
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
-
     // Map
-    compile("com.google.android.gms:play-services-maps:${androidGmsVersion}")
-
+    compile "com.google.android.gms:play-services-maps:${androidGmsVersion}"
     // Firebase
     //compile("com.google.firebase:firebase-core:${firebaseVersion}")
-    compile("com.google.firebase:firebase-database:${firebaseVersion}")
-    compile("com.google.firebase:firebase-auth:${firebaseVersion}")
+    compile "com.google.firebase:firebase-database:${firebaseVersion}"
+    compile "com.google.firebase:firebase-auth:${firebaseVersion}"
     //compile("com.google.firebase:firebase-storage:${firebaseVersion}")
     //compile("com.google.firebase:firebase-messaging:${firebaseVersion}")
     //compile("com.google.firebase:firebase-config:${firebaseVersion}")
-
+    compile 'com.firebase:firebase-jobdispatcher:0.7.0'
     // FirebaseUI
     compile 'com.firebaseui:firebase-ui-auth:1.1.1'
-    compile("com.google.android.gms:play-services-auth:${androidGmsVersion}")
-
-    compile("com.google.android.gms:play-services-location:${androidGmsVersion}")
-    compile("com.google.android.gms:play-services-places:${androidGmsVersion}")
+    compile "com.google.android.gms:play-services-auth:${androidGmsVersion}"
+    compile "com.google.android.gms:play-services-location:${androidGmsVersion}"
+    compile "com.google.android.gms:play-services-places:${androidGmsVersion}"
 }
 apply plugin: 'com.google.gms.google-services'

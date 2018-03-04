@@ -26,7 +26,7 @@ public class DragLayout implements View.OnTouchListener {
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         int MaxHeight = 1200;
-        int MinHeight = 450;
+        int MinHeight = 550;
 
         switch (event.getActionMasked()) {
 
@@ -45,7 +45,7 @@ public class DragLayout implements View.OnTouchListener {
 
                 // move accordingly
                 mBottomFrame.getParent();
-                ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) mBottomFrame.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = mBottomFrame.getLayoutParams();
                 float newHeight = layoutParams.height + dy;
                 if (newHeight <= MaxHeight && newHeight >= MinHeight) {
                     layoutParams.height = (int) newHeight;

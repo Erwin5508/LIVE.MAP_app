@@ -11,8 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:visibility="gone"
+        <ImageButton
+            android:background="@drawable/ic_remove_circle_outline_black_24dp"
+            android:padding="20dp"
             android:id="@+id/recycler_view_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -25,11 +26,10 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:inputType="textCapWords"
                 android:id="@+id/objective_title"
                 android:layout_margin="5dp"
-                android:visibility="gone"
                 android:textSize="22sp"
+                android:hint="@string/new_objective_title_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -43,8 +43,8 @@
             <EditText
                 android:inputType="textLongMessage"
                 android:id="@+id/objective_description"
-                android:visibility="gone"
                 android:textSize="22sp"
+                android:hint="@string/new_objective_description_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -53,6 +53,26 @@
                 android:textSize="22sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/cancel_this_objective_button"
+                    android:text="@string/cancel_button_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <Button
+                    android:id="@+id/add_this_objective_button"
+                    android:text="@string/add_objective_string"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </LinearLayout>

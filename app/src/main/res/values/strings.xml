@@ -2,21 +2,21 @@
     <string name="app_name">LIVE.MAP</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
 
     <string name="send_button_label">Send</string>
     <string name="cancel_button_label">Cancel</string>
 
+    <string name="add_objective_string">ADD</string>
+
     <string name="message_suggestion">type message...</string>
-    <string name="relative_layout_screen_position">center_horizontal</string>
+
+    <string name="new_objective_title_hint">Enter title</string>
+    <string name="new_objective_description_hint">Enter description</string>
+
+    <string name="map_choose_location">CHOOSE LOCATION</string>
+    <string name="deleting_objectives_message">YOU ARE CURRENTLY DELETING OBJECTIVES</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_objective_description">add an objective</string>
+    <string name="delete_objective_description">delete an objective</string>
+    <string name="widget_description_text">Description</string>
 </resources>

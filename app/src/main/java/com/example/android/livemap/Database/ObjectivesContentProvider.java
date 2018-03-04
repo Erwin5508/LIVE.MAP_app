@@ -28,6 +28,7 @@ public class ObjectivesContentProvider extends ContentProvider {
         uriMatcher.addURI(ObjectivesContract.AUTHORITY,
                 ObjectivesContract.PATH_TO_ALL_IN_DATA, ALL_DATA);
 
+
         return uriMatcher;
     }
 
@@ -105,7 +106,7 @@ public class ObjectivesContentProvider extends ContentProvider {
         switch (match) {
 
             case ALL_DATA:
-                tasksDeleted = db.delete(OBJECTIVES_TABLE_NAME, null, null);
+                tasksDeleted = db.delete(OBJECTIVES_TABLE_NAME, selection, selectionArgs);
                 break;
 
             default:

@@ -10,6 +10,10 @@ public class Users {
     private double latitude;
     private double longitude;
 
+    public Users() {
+
+    }
+
     public Users(String user_id, double latitude, double longitude) {
         this.user_id = user_id;
         this.latitude = latitude;
