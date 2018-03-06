@@ -173,7 +173,7 @@ public class ObjectivesAdapter extends RecyclerView.Adapter<ObjectivesAdapter.Ob
                 vDescriptionInsert.setText("");
                 mClickHandler.onClick(v.getId(), null, -1);
             } else if (v.getId() == vDelete.getId() && vTitleInsert.getVisibility() != View.VISIBLE) {
-                mClickHandler.onClick(v.getId(), null, this.getPosition());
+                mClickHandler.onClick(v.getId(), null, this.getAdapterPosition());
             }
         }
 

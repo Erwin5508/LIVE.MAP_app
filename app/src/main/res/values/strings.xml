@@ -19,4 +19,23 @@
     <string name="add_objective_description">add an objective</string>
     <string name="delete_objective_description">delete an objective</string>
     <string name="widget_description_text">Description</string>
+
+    <string name="api_client_connection_successful">API Client Connection Successful!</string>
+    <string name="api_client_connection_suspended">API Client Connection Suspended!</string>
+    <string name="api_client_connection_failed">API Client Connection Failed!</string>
+
+    <string name="nope_broadcast_location">You will not be able to broadcast your location</string>
+    <string name="welcome_no_internet">Welcome! Connect to the internet to experience the full app</string>
+
+    <string name="signed_in">Signed in!</string>
+    <string name="sign_in_canceled">Sign in canceled</string>
+
+    <string name="your_location">your location</string>
+    <string name="ninja_lair">Ninja Lair</string>
+
+    <string name="delete_an_objective">Delete this objective</string>
+    <string name="tool_bar_label">Live Map app</string>
 </resources>
+
+
+<!--getString(R.string.)-->

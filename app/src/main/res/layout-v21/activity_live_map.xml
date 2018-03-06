@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/the_whole_frame"
+<RelativeLayout android:id="@+id/the_whole_frame"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.livemap.LiveMapActivity">
+    tools:context="com.example.android.livemap.LiveMapActivity"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        app:title="@string/tool_bar_label"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
     <fragment
         android:name="com.google.android.gms.maps.MapFragment"
@@ -20,10 +30,10 @@
         android:text="Hello World!"
         android:visibility="visible"
         android:id="@+id/message_display_box"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="4dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginLeft="4dp"
+        android:layout_alignStart="@id/Menu_map"
+        android:layout_marginTop="59dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="4dp"
         android:padding="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

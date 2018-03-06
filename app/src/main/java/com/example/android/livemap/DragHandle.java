@@ -24,28 +24,6 @@ public class DragHandle extends android.support.v7.widget.AppCompatImageView {
 
     @Override
     public void onDraw(Canvas canvas){
-//        Paint paint = new Paint();
-//        paint.setColor(Color.parseColor("#01579B"));
-//        paint.setAntiAlias(true);
-//        paint.setStyle(Paint.Style.FILL_AND_STROKE);
-//        paint.setStrokeWidth(20);
-//
-//        float[] points = generatePoints();
-//
-//        canvas.drawPoints(points, paint);
         super.onDraw(canvas);
-    }
-
-    private float[] generatePoints() {
-        float param = 1500;
-
-        float min = 0.0f;
-        float max = 1.0f * param;
-        float[] result = new float[(int) max ];
-        for (int i = 0; i<(int) max ; i++) {
-            result[i] = min;
-            min += 1;
-        }
-        return result;
     }
 }

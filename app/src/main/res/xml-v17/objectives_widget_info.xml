@@ -2,8 +2,8 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/objectives_widget_list_view"
     android:initialLayout="@layout/objectives_widget_list_view"
-    android:minHeight="400dp"
-    android:minWidth="400dp"
+    android:minHeight="200dp"
+    android:minWidth="200dp"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="1800000"
     android:widgetCategory="home_screen"/>

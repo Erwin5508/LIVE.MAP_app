@@ -120,8 +120,7 @@ public class LiveMapActivity extends AppCompatActivity implements
     private RecyclerView mObjectivesRecyclerView;
 
     private EditText mMessageEditText;
-    private StringBuilder mMessagesText = new StringBuilder("Welcome! Connect to the internet " +
-            "to experience the full app");
+    private StringBuilder mMessagesText;
     private MessageDisplay mMessageDisplay;
     private FusedLocationProviderApi mFusedLocationClient;
     private GoogleApiClient mClient;
@@ -133,6 +132,10 @@ public class LiveMapActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_map);
+
+        if (savedInstanceState == null) {
+            mMessagesText = new StringBuilder(getString(R.string.welcome_no_internet));
+        }
 
         mHandle = (DragHandle) findViewById(R.id.drag_handle);
         mBottomFrame = (RelativeLayout) findViewById(R.id.bottom_frame);
@@ -284,6 +287,7 @@ public class LiveMapActivity extends AppCompatActivity implements
             mObjectivesAdapter.newObjective = savedInstanceState.getBoolean(NEW_OBJ);
             if (mObjectivesAdapter.deleteObjectives) {
                 mCancelButton.setVisibility(View.VISIBLE);
+                mSendButton.setVisibility(View.GONE);
                 mCancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -298,17 +302,20 @@ public class LiveMapActivity extends AppCompatActivity implements
                 });
             }
             mObjectivesAdapter.notifyDataSetChanged();
+            mMessageEditText.setText(savedInstanceState.getString(MESS_INPUT));
         }
     }
 
     private final String DELETE_OBJ = "delete_objectives";
     private final String NEW_POS = "new_position";
     private final String NEW_OBJ = "new_objective";
+    private final String MESS_INPUT = "message_input";
     @Override
     public void onSaveInstanceState(Bundle outState){
         outState.putBoolean(DELETE_OBJ, mObjectivesAdapter.deleteObjectives);
         outState.putInt(NEW_POS, mObjectivesAdapter.newPosition);
         outState.putBoolean(NEW_OBJ, mObjectivesAdapter.newObjective);
+        outState.putString(MESS_INPUT, mMessageEditText.getText().toString());
     }
 
     public void initScroller(Scroller scroller) {
@@ -340,7 +347,7 @@ public class LiveMapActivity extends AppCompatActivity implements
     private void startLocationUpdates(LocationRequest request, LocationListener listener) {
         if (ActivityCompat.checkSelfPermission(LiveMapActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(LiveMapActivity.this, "You will not be able to broadcast your location",
+            Toast.makeText(LiveMapActivity.this, getString(R.string.nope_broadcast_location),
                     Toast.LENGTH_LONG).show();
             return;
         }
@@ -378,9 +385,9 @@ public class LiveMapActivity extends AppCompatActivity implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.signed_in), Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.sign_in_canceled), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -426,7 +433,7 @@ public class LiveMapActivity extends AppCompatActivity implements
 
         if (ActivityCompat.checkSelfPermission(LiveMapActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(LiveMapActivity.this, "You will not be able to broadcast your location",
+            Toast.makeText(LiveMapActivity.this, getString(R.string.nope_broadcast_location),
                     Toast.LENGTH_LONG).show();
         } else {
             mClient = new GoogleApiClient.Builder(this)
@@ -449,7 +456,7 @@ public class LiveMapActivity extends AppCompatActivity implements
                             .position(position)
                             .icon(BitmapDescriptorFactory.fromBitmap(new HelperClass().
                                     _getBitmap(R.drawable.ic_green_android, LiveMapActivity.this)))
-                            .title("your location"));
+                            .title(getString(R.string.your_location)));
                     mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(position));
                 }
             };
@@ -465,7 +472,7 @@ public class LiveMapActivity extends AppCompatActivity implements
         Marker marker = googleMap.addMarker(new MarkerOptions()
                 .position(sydney)
                 .icon(BitmapDescriptorFactory.fromBitmap(markerBitmap))
-                .title("Ninja Lair"));
+                .title(getString(R.string.ninja_lair)));
 
         // Objectives Markers
         loadObjectiveMarkers();
@@ -599,17 +606,17 @@ public class LiveMapActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Toast.makeText(LiveMapActivity.this, "API Client Connection Successful!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LiveMapActivity.this, getString(R.string.api_client_connection_successful), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Toast.makeText(LiveMapActivity.this, "API Client Connection Suspended!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LiveMapActivity.this, getString(R.string.api_client_connection_suspended), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(LiveMapActivity.this, "API Client Connection Failed!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(LiveMapActivity.this, getString(R.string.api_client_connection_failed), Toast.LENGTH_SHORT).show();
     }
 
     public void changeSizeAnimation(ViewGroup rView, int GForce, int newSize) {
